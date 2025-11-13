@@ -1,13 +1,14 @@
 import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-print(">>> sys.path[0]:", sys.path[0])  # 临时调试行，可删除
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pytest
-
 from utils.text_processing import (
     clean_code_block_tags,
     remove_reasoning_from_output,
     extract_json_from_text,
+    truncate_content,
+    format_search_results_for_prompt,
+    validate_json_schema
 )
 
 
@@ -61,35 +62,35 @@ def test_extract_json_from_text_invalid():
     assert "raw_text" in result
 
 
-# def test_truncate_content_short_text():
-#     text = "short text"
-#     result = truncate_content(text, max_length=20)
-#     assert result == text
+def test_truncate_content_short_text():
+    text = "short text"
+    result = truncate_content(text, max_length=20)
+    assert result == text
 
 
-# def test_truncate_content_long_text():
-#     text = "word " * 1000
-#     result = truncate_content(text, max_length=50)
-#     assert len(result) <= 53  # 包含 ...
-#     assert result.endswith("...")
+def test_truncate_content_long_text():
+    text = "word " * 1000
+    result = truncate_content(text, max_length=50)
+    assert len(result) <= 53  # 包含 ...
+    assert result.endswith("...")
 
 
-# def test_format_search_results_for_prompt():
-#     results = [
-#         {"content": "第一条结果"},
-#         {"content": "第二条结果"},
-#         {"content": ""}
-#     ]
-#     formatted = format_search_results_for_prompt(results)
-#     assert "第一条结果" in formatted
-#     assert "第二条结果" in formatted
-#     assert "\n\n" in formatted  # 多段拼接
+def test_format_search_results_for_prompt():
+    results = [
+        {"content": "第一条结果"},
+        {"content": "第二条结果"},
+        {"content": ""}
+    ]
+    formatted = format_search_results_for_prompt(results)
+    assert "第一条结果" in formatted
+    assert "第二条结果" in formatted
+    assert "\n\n" in formatted  # 多段拼接
 
 
-# def test_validate_json_schema():
-#     data = {"a": 1, "b": 2}
-#     required = ["a", "b"]
-#     assert validate_json_schema(data, required)
+def test_validate_json_schema():
+    data = {"a": 1, "b": 2}
+    required = ["a", "b"]
+    assert validate_json_schema(data, required)
 
-#     required_missing = ["a", "c"]
-#     assert not validate_json_schema(data, required_missing)
+    required_missing = ["a", "c"]
+    assert not validate_json_schema(data, required_missing)

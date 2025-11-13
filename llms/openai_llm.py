@@ -21,7 +21,7 @@ class OpenAILLM(BaseLLM):
             api_key=self.api_key,
             base_url=self.base_url)
 
-    def _build_params(self, messages, stream=False, **kwargs) -> dict[str, Any]:
+    def _build_params(self, messages,  **kwargs) -> dict[str, Any]:
         return {
             "model": self.model_name,
             "messages": messages,
